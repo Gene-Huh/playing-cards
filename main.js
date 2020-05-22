@@ -2,15 +2,23 @@ import cardDeck from "./cardDeck.js";
 
 document.addEventListener('DOMContentLoaded', ()=> {
   //draw card deck
-  const cardGrid = document.getElementById('card-display');
+  //const cardGrid = document.getElementById('card-display');
   const btnGroup = document.getElementById('btn-group');
-  const shuffleBtn = document.getElementById('shuffleCards');
+  const shuffleAllBtn = document.getElementById('shuffleCards');
   const splitBtn = document.getElementById('splitDeck');
+  const leftSide = document.getElementById('Left');
+  const rightSide = document.getElementById('Right');
+  const leftShuffleBtn = document.getElementById('left-Shuffle');
+  const rightShuffleBtn = document.getElementById('right-Shuffle');
 
-  shuffleBtn.addEventListener('click', event=>{
+  shuffleAllBtn.addEventListener('click', event=>{
     event.stopPropagation();
-    const allDivs = cardGrid.querySelectorAll('.card');
-    shuffleCards(allDivs, cardGrid);
+    rightSide.querySelectorAll('.card').forEach(card=>leftSide.appendChild(card));
+    shuffleCards(leftSide.childNodes, leftSide);
+    splitBtn.setAttribute('style', 'visibility:visible;');
+    leftShuffleBtn.setAttribute('style', 'visibility:hidden;');
+    rightShuffleBtn.setAttribute('style', 'visibility:hidden;');
+    leftSide.classList.remove('card-grid');
   });
 
   splitBtn.addEventListener('click', event=>{
@@ -18,9 +26,18 @@ document.addEventListener('DOMContentLoaded', ()=> {
     splitDeck();
   })
 
-  drawCardDeck();
+  leftShuffleBtn.addEventListener('click', event=>{
+    event.stopPropagation();
+    shuffleCards(leftSide.childNodes, leftSide);
+  });
+  rightShuffleBtn.addEventListener('click', event=>{
+    event.stopPropagation();
+    shuffleCards(rightSide.childNodes, rightSide);
+  });
 
-  function drawCardDeck() {
+  createCardDeck();
+
+  function createCardDeck() {
     cardDeck.forEach(card => {
       const newDiv = document.createElement('div');
       newDiv.classList.add('card', card.color);
@@ -37,7 +54,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
           newDiv.classList.add('faceUp');
         }
       })
-      cardGrid.appendChild(newDiv);
+      leftSide.appendChild(newDiv);
     })
   }
 
@@ -50,36 +67,15 @@ document.addEventListener('DOMContentLoaded', ()=> {
   };
 
   function splitDeck() {
-    const cardDivs = cardGrid.querySelectorAll('.card');
-    let newCards = shuffleCards(cardDivs);
+    const cardDivs = leftSide.querySelectorAll('.card');
+    let newCards = shuffleCards(cardDivs, leftSide);
     const halfDeck = Math.floor(newCards.length/2);
-    let leftDeck = newCards.slice(0,halfDeck);
-    let rightDeck = newCards.slice(halfDeck);
- 
-    cardGrid.appendChild(createHalf(leftDeck, "Left"));
-    cardGrid.appendChild(createHalf(rightDeck, "Right"));
-
-    //const leftSide = document.getElementById('Left').children;
-  }
-
-  function createHalf(cards, side) {
-    const halfDeck = document.createElement('div');
-    halfDeck.id = side;
-    halfDeck.classList.add('card-grid');
-
-    const halfShuffleBtn =document.createElement('button');
-    halfShuffleBtn.innerText = `Shuffle ${side}`;
-    halfShuffleBtn.id = `Shuffle-${side}`;
-    btnGroup.appendChild(halfShuffleBtn);
-    cards.forEach(card => halfDeck.appendChild(card));
-    halfShuffleBtn.addEventListener('click', event=>{
-      event.stopPropagation();
-      const theseCards = halfDeck.querySelectorAll('.card');
-      const thisHalf = document.getElementById(halfDeck.id);
-      console.log(theseCards);
-      shuffleCards(theseCards, thisHalf);
-    })
-
-    return halfDeck;
+    for (let i=0; i<halfDeck; i++){
+      rightSide.appendChild(cardDivs[i]);
+    }
+    splitBtn.setAttribute('style', 'visibility:hidden;');
+    leftShuffleBtn.setAttribute('style', 'visibility:visible;');
+    rightShuffleBtn.setAttribute('style', 'visibility:visible;');
+    leftSide.classList.add('card-grid');
   }
 });
