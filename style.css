@@ -1,0 +1,52 @@
+body {
+  background-color: green;
+}
+
+#card-display {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.card {
+  background-image: url(cardback.gif);
+  border-color: #808080 #000000 #000000 #808080;
+  border-width: 1px;
+  border-style: solid;
+  width:  3.75em;
+  height: 5.00em;
+  font-size: 10pt;
+  margin: 5px;
+  display: inline-block;
+}
+
+.card>span {
+  visibility: hidden;
+}
+.faceUp{
+  background-image: none;
+  background-color: white;
+  justify-content: center;
+}
+
+.faceUp>span{
+  visibility: visible;
+  display: block;
+}
+
+.black {
+  color: black;
+}
+.red {
+  color: red;
+}
+.card-grid {
+  width: 45%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 20px;
+}
+
+button {
+  margin: 0 10px;
+}
